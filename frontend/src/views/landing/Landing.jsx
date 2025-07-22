@@ -1,0 +1,87 @@
+import React, { useEffect, useState } from "react";
+import { CiCirclePlus } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
+import isLoggedIn from "../../utils/isLoggedIn";
+
+export default function Landing() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const result = await isLoggedIn();
+      setLoggedIn(result);
+    };
+    checkLogin();
+  }, []);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await fetch("http://localhost:3001/api/posts", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setPosts(data.posts);
+    };
+
+    if (loggedIn && token) {
+      fetchPosts();
+    }
+  }, [loggedIn, token]);
+
+  return (
+    <div className="">
+      {loggedIn ? (
+        <div className="w-full max-w-6xl mt-20">
+          {posts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 bg-gray-800 rounded-xl shadow-lg">
+              <CiCirclePlus className="text-white text-8xl mb-4" />
+              <p className="text-white text-2xl font-medium">
+                No hay publicaciones todavía
+              </p>
+              <p className="text-gray-400 text-sm mt-2">
+                ¡Sé el primero en compartir algo!
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-6">
+              {posts.map((post) => (
+                <div
+                  key={post.id}
+                  onClick={() => navigate(`/profile/${post.author.id}`)}
+                  className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group"
+                >
+                  <img
+                    src={`http://localhost:3001${encodeURI(post.image)}`}
+                    alt="Imagen del post"
+                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white px-4 py-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="font-semibold">{post.author.username}</p>
+                    {post.content && (
+                      <p className="text-xs text-gray-300 truncate">
+                        {post.content}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-white mb-6 drop-shadow-md">
+            Bienvenido a Looping
+          </h1>
+          <p className="text-lg text-gray-300 max-w-md mx-auto">
+            Una plataforma interactiva donde puedes compartir momentos y
+            conectar con tus amigos.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}

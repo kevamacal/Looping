@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+.input-animado {
+  @apply w-64 px-4 py-2 rounded-md border border-gray-300 shadow-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#9354ff] focus:border-transparent;
+  background-color: white;
+  color: #0c122b;
+}
+
+.input-animado::placeholder {
+  color: #a3a3a3;
+  transition: all 0.3s ease;
+}
+
+.input-animado:focus::placeholder {
+  opacity: 0.5;
+  transform: translateY(-4px);
+}
+
+.button-animado {
+  @apply bg-[#0c122b] text-white rounded-lg px-3 py-2 mt-4 transition-all duration-300 ease-in-out hover:bg-[#1c1f36] hover:scale-105 hover:shadow-md;
+}
+
+.button-animado:hover {
+  @apply bg-[#1c1f36] scale-105 shadow-md;
+}
+.button-animado:focus {
+  @apply ring-2 ring-[#9354ff] focus:outline-none;
+}
