@@ -10,6 +10,8 @@ import { verifyToken } from "./middlewares/verifyToken.js";
 import authRoutes from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import postsRouter from "./routes/posts.js";
+import followsRouter from "./routes/follows.js";
+import likesRouter from "./routes/likes.js";
 import uploadImageRouter from "./routes/uploadImage.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +26,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", verifyToken, usersRouter);
 app.use("/api/posts", verifyToken, postsRouter);
+app.use("/api/follows", verifyToken, followsRouter);
+app.use("/api/likes", verifyToken, likesRouter);
 app.use("/api/upload-image", verifyToken, uploadImageRouter);
 app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 

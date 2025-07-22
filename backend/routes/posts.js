@@ -7,17 +7,31 @@ const prisma = new PrismaClient();
 
 router.get("/", async (req, res) => {
   try {
+    const userId = req.user.id;
+
     const posts = await prisma.post.findMany({
       where: {
         NOT: {
-          authorId: req.user.id,
+          authorId: userId,
         },
       },
       include: {
         author: true,
+        likes: {
+          where: { userId },
+          select: { id: true },
+        },
       },
     });
-    res.json({ posts });
+
+    const postsWithLikes = posts.map((post) => ({
+      ...post,
+      isLiked: post.likes.length > 0,
+    }));
+
+    console.log(posts);
+
+    res.json({ posts: postsWithLikes });
   } catch (error) {
     res.status(500).json({
       error: "Error al obtener los posts",
