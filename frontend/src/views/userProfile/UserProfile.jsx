@@ -29,7 +29,7 @@ export default function UserProfile() {
   }, [id, token]);
 
   const toggleFollow = async () => {
-    const res = await fetch(`http://localhost:3001/api/users/${id}/follow`, {
+    const res = await fetch(`http://localhost:3001/api/follows/${id}`, {
       method: following ? "DELETE" : "POST",
       headers: {
         Authorization: `Bearer ${token}`,

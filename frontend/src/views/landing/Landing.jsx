@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import isLoggedIn from "../../utils/isLoggedIn";
+import { FaHeart } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 export default function Landing() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -31,6 +33,28 @@ export default function Landing() {
     }
   }, [loggedIn, token]);
 
+  const toggleLike = async (postId, isLiked) => {
+    const method = isLiked ? "DELETE" : "POST";
+    const res = await fetch(`http://localhost:3001/api/likes`, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ postId }),
+    });
+
+    if (res.ok) {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId ? { ...post, isLiked: !isLiked } : post
+        )
+      );
+    } else {
+      alert("Error al cambiar estado de like");
+    }
+  };
+
   return (
     <div className="">
       {loggedIn ? (
@@ -50,21 +74,44 @@ export default function Landing() {
               {posts.map((post) => (
                 <div
                   key={post.id}
-                  onClick={() => navigate(`/profile/${post.author.id}`)}
                   className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group"
                 >
                   <img
                     src={`http://localhost:3001${encodeURI(post.image)}`}
+                    onClick={() => navigate(`/post/${post.id}`)}
                     alt="Imagen del post"
                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white px-4 py-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="font-semibold">{post.author.username}</p>
-                    {post.content && (
-                      <p className="text-xs text-gray-300 truncate">
-                        {post.content}
-                      </p>
-                    )}
+                  <div className="flex absolute bottom-0 left-0 right-0 bg-black/60 text-white px-4 py-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex flex-col">
+                      <p className="font-semibold">{post.author.username}</p>
+                      {post.content && (
+                        <p className="text-xs text-gray-300 truncate">
+                          {post.content}
+                        </p>
+                      )}
+                    </div>
+
+                    <motion.button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleLike(post.id, post.isLiked);
+                      }}
+                      className="absolute right-4 top-3 cursor-pointer"
+                      whileTap={{ scale: 1.3 }}
+                      animate={{ scale: post.isLiked ? 1.2 : 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 10,
+                      }}
+                    >
+                      <FaHeart
+                        className={`w-7 h-7 transition-colors duration-300 ${
+                          post.isLiked ? "text-red-500" : "text-white"
+                        }`}
+                      />
+                    </motion.button>
                   </div>
                 </div>
               ))}
