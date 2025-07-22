@@ -18,9 +18,9 @@ export default function Nav() {
 
   const logout = () => {
     if (window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+      navigate("/login");
       localStorage.removeItem("token");
       window.dispatchEvent(new Event("storage"));
-      navigate("/");
     }
   };
 
