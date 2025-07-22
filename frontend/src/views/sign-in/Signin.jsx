@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/redes-sociales.jpg";
-import "./Signin.css";
 
 export default function Login() {
   const navigate = useNavigate();
