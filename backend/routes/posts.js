@@ -1,6 +1,7 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { validatePostInput } from "../middlewares/validatePostInput.js";
+import formatPostDate from "../utils/formatPostDate.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -29,13 +30,61 @@ router.get("/", async (req, res) => {
       isLiked: post.likes.length > 0,
     }));
 
-    console.log(posts);
-
     res.json({ posts: postsWithLikes });
   } catch (error) {
     res.status(500).json({
       error: "Error al obtener los posts",
     });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const currentUserId = req.user.id;
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: Number(id) },
+      select: {
+        id: true,
+        authorId: true,
+        content: true,
+        image: true,
+        createdAt: true,
+      },
+    });
+
+    post.createdAt = formatPostDate(post.createdAt);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post no encontrado" });
+    }
+
+    const author = await prisma.user.findUnique({
+      where: { id: post.authorId },
+      select: {
+        id: true,
+        username: true,
+        avatar: true,
+      },
+    });
+
+    const isLikedByUser = await prisma.like.findFirst({
+      where: {
+        userId: currentUserId,
+        postId: post.id,
+      },
+    });
+
+    const responsePost = {
+      ...post,
+      author,
+      isLiked: !!isLikedByUser,
+    };
+
+    res.json({ post: responsePost });
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener el post" });
   }
 });
 
