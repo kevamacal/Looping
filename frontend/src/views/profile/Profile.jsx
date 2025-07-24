@@ -17,9 +17,7 @@ export default function Profile() {
         },
       });
 
-      if (!res.ok) {
-        return alert("Error al obtener el perfil");
-      }
+      if (!res.ok) return alert("Error al obtener el perfil");
 
       const data = await res.json();
       setUser(data.user);
@@ -31,21 +29,20 @@ export default function Profile() {
   }, [token]);
 
   return (
-    <div className="flex flex-col items-center justify-center  bg-gray-900 px-10 py-12 rounded-2xl">
-      <div className="bg-gray-800 text-white p-8 rounded-xl shadow-lg w-full max-w-lg">
-        <h1 className="text-4xl font-bold text-center mb-8">Mi perfil</h1>
+    <div className="flex flex-col items-center justify-center bg-gray-900 px-6 py-12 rounded-2xl w-full max-w-3xl mx-auto">
+      <div className="bg-gray-800 text-white p-8 rounded-xl shadow-lg w-full">
+        <h1 className="text-3xl font-bold text-center mb-8">Mi perfil</h1>
         {user ? (
           <div className="flex flex-col items-center text-center">
             <div
               className="relative w-32 h-32 mb-6 cursor-pointer group"
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
-              onClick={() => alert("Editar perfil (funcionalidad pendiente)")}
             >
               <img
                 src={user.avatar}
                 alt="Foto de perfil"
-                className="w-full h-full rounded-full object-cover border-4 border-white shadow-md transition-transform duration-200 group-hover:scale-105"
+                className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-200"
               />
               {hover && (
                 <img
@@ -55,35 +52,34 @@ export default function Profile() {
                 />
               )}
             </div>
-            <p className="text-xl font-semibold mb-2">
+            <p className="text-lg font-semibold mb-2">
               <span className="text-gray-400">Usuario:</span> {user.username}
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6 mb-2">
               <p
-                className="text-md font-medium mb-2 cursor-pointer"
+                className="text-md font-medium cursor-pointer"
                 onClick={() =>
                   navigate(`/followers/${user.id}`, {
                     state: { users: followers, type: "followers" },
                   })
                 }
               >
-                <span className="text-gray-400">Seguidores: </span>
+                <span className="text-gray-400">Seguidores:</span>{" "}
                 {followers.length}
               </p>
-
               <p
-                className="text-md font-medium mb-2 cursor-pointer"
+                className="text-md font-medium cursor-pointer"
                 onClick={() =>
                   navigate(`/following/${user.id}`, {
                     state: { users: following, type: "following" },
                   })
                 }
               >
-                <span className="text-gray-400">Seguidos: </span>
+                <span className="text-gray-400">Seguidos:</span>{" "}
                 {following.length}
               </p>
             </div>
-            <p className="text-md font-medium mb-2">
+            <p className="text-md font-medium">
               <span className="text-gray-400">Correo:</span> {user.email}
             </p>
             <p className="text-md font-medium mt-4">
@@ -91,7 +87,9 @@ export default function Profile() {
             </p>
           </div>
         ) : (
-          <p className="text-center text-gray-400">Cargando perfil...</p>
+          <p className="text-center text-gray-400 animate-pulse">
+            Cargando perfil...
+          </p>
         )}
       </div>
     </div>

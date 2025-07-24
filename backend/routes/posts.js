@@ -51,6 +51,19 @@ router.get("/:id", async (req, res) => {
         content: true,
         image: true,
         createdAt: true,
+        comments: {
+          select: {
+            id: true,
+            text: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                avatar: true,
+              },
+            },
+          },
+        },  
       },
     });
 

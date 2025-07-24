@@ -1,5 +1,4 @@
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function UsersList() {
   const { state } = useLocation();
@@ -8,7 +7,7 @@ export default function UsersList() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center bg-gray-900 px-6 py-12 text-white w-3/4 rounded-2xl">
+    <div className="flex flex-col items-center bg-gray-900 px-6 py-12 text-white w-full max-w-3xl mx-auto rounded-2xl">
       <h1 className="text-2xl font-bold mb-8">
         {type === "followers" ? "Seguidores" : "Siguiendo"}
       </h1>
@@ -16,11 +15,11 @@ export default function UsersList() {
       {users.length === 0 ? (
         <p className="text-gray-400">No hay usuarios para mostrar.</p>
       ) : (
-        <div className="w-full max-w-3xl space-y-4">
+        <div className="w-full space-y-4">
           {users.map((user) => (
             <div
               key={user.id}
-              className="flex items-center bg-gray-800 p-4 rounded-lg shadow hover:bg-gray-700 transition cursor-pointer"
+              className="flex items-center bg-gray-800 p-4 rounded-xl shadow hover:bg-gray-700 transition cursor-pointer"
               onClick={() => navigate(`/profile/${user.id}`)}
             >
               <img

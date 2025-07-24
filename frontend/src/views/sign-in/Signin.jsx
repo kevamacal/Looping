@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/redes-sociales.jpg";
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -32,47 +32,51 @@ export default function Login() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center w">
-      <div className="bg-gradient-to-r from-[#19fdeacf] to-[#9354ff] p-8 rounded-lg shadow-lg text-center flex items-center">
-        <div className="flex flex-col justify-center items-center mr-20">
-          <h2 className="text-[#0c122b] mb-5">Registrar usuario</h2>
-          <img src={img} alt="Red social" className="h-32 mb-4" />
+    <div className="w-3/4 flex items-center justify-center bg-gray-950 px-4 py-10 rounded-2xl">
+      <div className="flex flex-col md:flex-row items-center gap-10 bg-gray-900 p-10 rounded-2xl shadow-2xl w-full max-w-4xl">
+        <div className="text-center md:text-left">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Crear tu cuenta
+          </h2>
+          <img
+            src={img}
+            alt="Red social"
+            className="h-32 mx-auto md:mx-0 rounded-xl"
+          />
         </div>
 
         <form
-          className="flex flex-col items-center mt-4 gap-5"
           onSubmit={(e) => e.preventDefault()}
+          className="flex flex-col gap-4 w-full max-w-sm"
         >
           <input
             type="text"
             placeholder="Nombre de usuario"
-            className="input-animado"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className="w-full outline-0 px-4 py-2 bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-400 focus:border-fuchsia-500 transition-all duration-200 ease-in-out"
           />
           <input
             type="email"
             placeholder="Correo electrónico"
-            className="input-animado"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full outline-0 px-4 py-2 bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-400 focus:border-fuchsia-500 transition-all duration-200 ease-in-out"
           />
           <input
             type="password"
             placeholder="Contraseña"
-            className="input-animado"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full outline-0 px-4 py-2 bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-400 focus:border-fuchsia-500 transition-all duration-200 ease-in-out"
           />
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => signin()}
-              className="bg-[#0c122b] text-white rounded-lg px-3 py-2 mt-4 transition-all duration-300 ease-in-out hover:bg-[#1c1f36] hover:scale-105 hover:shadow-md"
-            >
-              Crear cuenta
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={signin}
+            className="w-full py-2 rounded-lg bg-fuchsia-600 text-white font-semibold hover:bg-fuchsia-700 hover:scale-105 transition"
+          >
+            Crear cuenta
+          </button>
         </form>
       </div>
     </div>
