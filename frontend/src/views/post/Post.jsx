@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHeart, FaComment } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
+import "./Post.css";
 
 export default function Post() {
   const { id } = useParams();
@@ -90,7 +91,7 @@ export default function Post() {
   }, [id, token]);
 
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-10 w-full max-w-5xl mx-auto">
+    <div className="flex flex-col items-center justify-center px-4 py-10 w-full max-w-5xl mx-auto overflow-y-hidden">
       <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
         {post ? (
           <div className="flex flex-col items-center text-center">
@@ -159,11 +160,11 @@ export default function Post() {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="w-full mt-6 border-t border-gray-700 pt-6 overflow-hidden"
+                  className="w-full mt-6 border-t border-gray-700 pt-6 "
                 >
                   <h2 className="text-lg font-bold mb-4">Comentarios</h2>
 
-                  <div className="flex flex-col gap-4 mb-6">
+                  <div className="flex flex-col gap-4 mb-6 max-h-[25vh] overflow-y-auto scrollbar-custom">
                     {post?.comments?.length > 0 ? (
                       post.comments.map((comment) => (
                         <div
@@ -173,7 +174,10 @@ export default function Post() {
                           <img
                             src={comment.user.avatar}
                             alt="Avatar del autor"
-                            className="w-10 h-10 rounded-full border border-fuchsia-600"
+                            className="w-10 h-10 rounded-full border border-fuchsia-600 cursor-pointer"
+                            onClick={() =>
+                              navigate(`/profile/${comment.user.id}`)
+                            }
                           />
                           <div className="flex-1 text-left">
                             <div className="flex justify-between items-center mb-1">
