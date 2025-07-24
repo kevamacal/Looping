@@ -38,29 +38,26 @@ export default function UserProfile() {
 
     if (res.ok) {
       const data = await res.json();
-      if (data.message) {
-        setFollowing(!following);
-      }
+      if (data.message) setFollowing(!following);
     } else {
       alert("Error al cambiar estado de seguimiento");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl bg-gray-900 px-6 py-10">
-      <div className="bg-gray-800 text-white p-8 rounded-2xl shadow-xl w-full max-w-lg">
+    <div className="flex flex-col items-center justify-center px-6 py-10 w-full max-w-3xl mx-auto">
+      <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-full">
         {user ? (
           <div className="flex flex-col items-center text-center">
             <div
               className="relative w-32 h-32 mb-6 cursor-pointer group"
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
-              onClick={() => alert("Avatar del usuario")}
             >
               <img
                 src={user.avatar || "/default-avatar.png"}
                 alt="Avatar de usuario"
-                className="w-full h-full rounded-full object-cover border-4 border-white shadow-md transition-transform duration-200 group-hover:scale-105"
+                className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition"
               />
               {hover && (
                 <img
@@ -71,24 +68,21 @@ export default function UserProfile() {
               )}
             </div>
 
-            <h1 className="text-3xl font-bold mb-2">{user.username}</h1>
-
+            <h1 className="text-2xl font-bold mb-2">{user.username}</h1>
             <p className="text-sm text-gray-400 mb-4">
               {user.email || "Correo no disponible"}
             </p>
-
-            <p className="text-md font-medium mb-4 italic text-gray-300 max-w-xs">
+            <p className="text-md italic text-gray-300 max-w-xs mb-6">
               {user.bio || "Este usuario no ha agregado una biografía."}
             </p>
 
             <button
               onClick={toggleFollow}
-              className={`w-44 py-2 rounded-full text-lg font-semibold transition duration-300 shadow-md 
-                ${
-                  following
-                    ? "bg-red-500 hover:bg-red-600"
-                    : "bg-indigo-500 hover:bg-indigo-600"
-                }`}
+              className={`w-44 py-2 rounded-full text-lg font-semibold transition duration-300 shadow-md ${
+                following
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-fuchsia-600 hover:bg-fuchsia-700"
+              }`}
             >
               {following ? "Dejar de seguir" : "Seguir"}
             </button>

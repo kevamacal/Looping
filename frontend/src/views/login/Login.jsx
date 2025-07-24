@@ -8,60 +8,61 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const login = async () => {
-    if (!email || !password) {
+    if (!email || !password)
       return alert("Por favor, rellena todos los campos");
-    }
 
     const response = await fetch("http://localhost:3001/api/auth/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
-    localStorage.setItem("token", data.token);
+    if (data.error) return alert(data.error);
 
-    if (data.error) {
-      alert(data.error);
-    } else {
-      alert("Login exitoso");
-      navigate("/");
-    }
+    localStorage.setItem("token", data.token);
+    navigate("/");
   };
 
   return (
-    <div className="h-screen flex items-center justify-center w">
-      <div className="bg-gradient-to-r from-[#19fdeacf] to-[#9354ff] p-8 rounded-lg shadow-lg text-center flex items-center">
-        <div className="flex flex-col justify-center items-center mr-20">
-          <h2 className="text-[#0c122b] mb-5">Bienvenido a Looping</h2>
-          <img src={img} alt="Red social" className="h-32 mb-4" />
+    <div className="w-3/4 flex items-center justify-center bg-gray-950 px-4 py-10 rounded-2xl">
+      <div className="flex flex-col md:flex-row items-center gap-10 bg-gray-900 p-10 rounded-2xl shadow-2xl w-full max-w-4xl">
+        <div className="text-center md:text-left">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Bienvenido a Looping
+          </h2>
+          <img
+            src={img}
+            alt="Red social"
+            className="h-32 mx-auto md:mx-0 rounded-xl"
+          />
         </div>
 
         <form
-          className="flex flex-col items-center mt-4 gap-5"
           onSubmit={(e) => e.preventDefault()}
+          className="flex flex-col gap-4 w-full max-w-sm"
         >
           <input
             type="email"
             placeholder="Correo electrónico"
-            className="input-animado"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full outline-0 px-4 py-2 bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-400 focus:border-fuchsia-500 transition-all duration-200 ease-in-out"
           />
           <input
             type="password"
             placeholder="Contraseña"
-            className="input-animado"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full outline-0 px-4 py-2 bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-400 focus:border-fuchsia-500 transition-all duration-200 ease-in-out"
           />
-          <div className="flex items-center gap-3">
-            <button type="submit" onClick={login} className="button-animado">
-              Iniciar sesión
-            </button>
-          </div>
+          <button
+            type="submit"
+            onClick={login}
+            className="w-full py-2 rounded-lg bg-fuchsia-600 text-white font-semibold hover:bg-fuchsia-700 hover:scale-105 transition"
+          >
+            Iniciar sesión
+          </button>
         </form>
       </div>
     </div>
