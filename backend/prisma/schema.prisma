@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite" // o cambia a postgresql/mysql si lo necesitas
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -15,14 +15,12 @@ model User {
   bio      String?
   avatar   String?
 
-  // Relaciones con contenido
   posts    Post[]
   comments Comment[]
   likes    Like[]
 
-  // Relaciones de seguidores
-  followers Follow[] @relation("UserFollowers") // gente que me sigue
-  following Follow[] @relation("UserFollowing") // gente a la que sigo
+  followers Follow[] @relation("UserFollowers")
+  following Follow[] @relation("UserFollowing")
 }
 
 model Post {
