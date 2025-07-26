@@ -161,7 +161,11 @@ export default function Profile() {
                 className="text-md font-medium cursor-pointer"
                 onClick={() =>
                   navigate(`/followers/${user.id}`, {
-                    state: { users: followers, type: "followers" },
+                    state: {
+                      users: followers,
+                      imageType: imageType,
+                      type: "followers",
+                    },
                   })
                 }
               >
@@ -172,7 +176,11 @@ export default function Profile() {
                 className="text-md font-medium cursor-pointer"
                 onClick={() =>
                   navigate(`/following/${user.id}`, {
-                    state: { users: following, type: "following" },
+                    state: {
+                      users: following,
+                      imageType: imageType,
+                      type: "following",
+                    },
                   })
                 }
               >

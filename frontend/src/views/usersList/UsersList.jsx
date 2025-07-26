@@ -4,6 +4,7 @@ export default function UsersList() {
   const { state } = useLocation();
   const users = state?.users || [];
   const type = state?.type || "usuarios";
+  const imageType = state?.imageType || 0;
   const navigate = useNavigate();
 
   return (
@@ -23,7 +24,11 @@ export default function UsersList() {
               onClick={() => navigate(`/profile/${user.id}`)}
             >
               <img
-                src={user.avatar}
+                src={`${
+                  imageType == 0
+                    ? user.avatar
+                    : `http://localhost:3001${encodeURI(user.avatar)}`
+                }`}
                 alt="avatar"
                 className="w-12 h-12 rounded-full object-cover border border-white"
               />
