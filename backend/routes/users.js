@@ -61,4 +61,34 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.put("/myProfile", async (req, res) => {
+  const { avatar } = req.body;
+  const currentUserId = req.user.id;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: currentUserId },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        bio: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    const updateUser = await prisma.user.update({
+      where: { id: currentUserId },
+      data: { avatar },
+    });
+
+    res.json({ user: updateUser });
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar el perfil" });
+  }
+});
+
 export default router;
