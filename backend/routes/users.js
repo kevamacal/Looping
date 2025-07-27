@@ -40,6 +40,14 @@ router.get("/:id", async (req, res) => {
         email: true,
         avatar: true,
         bio: true,
+        posts: {
+          select: {
+            id: true,
+            content: true,
+            image: true,
+            createdAt: true,
+          },
+        },
       },
     });
 

@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PostsList from "../../components/PostsList";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
-  const [hover, setHover] = useState(false);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [error, setError] = useState("");
-  const [image, setImage] = useState(null);
   const [imageType, setImageType] = useState(0);
   const [imagePreview, setImagePreview] = useState(null);
+  const [posts, setPosts] = useState([]);
+
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -28,7 +29,6 @@ export default function Profile() {
     }
 
     setError("");
-    setImage(file);
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -105,22 +105,20 @@ export default function Profile() {
       setFollowers(data.followers);
       setFollowing(data.following);
       setImageType(data.user.avatar.startsWith("/uploads") ? 1 : 0);
+      setPosts(data.posts);
     };
 
     fetchUser();
   }, [token, imageType]);
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-900 px-6 py-12 rounded-2xl w-full max-w-3xl mx-auto">
-      <div className="bg-gray-800 text-white p-8 rounded-xl shadow-lg w-full">
-        <h1 className="text-3xl font-bold text-center mb-8">Mi perfil</h1>
+    <div className="flex flex-col items-center justify-center bg-gray-900 px-6 py-12 rounded-2xl w-full max-w-4xl mx-auto mt-10">
+      <div className="bg-gray-800 text-white p-10 rounded-xl shadow-lg w-full">
+        <h1 className="text-4xl font-bold text-center mb-10">Mi perfil</h1>
+
         {user ? (
-          <div className="flex flex-col items-center text-center">
-            <div
-              className="relative w-32 h-32 mb-6 cursor-pointer group"
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}
-            >
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="relative w-36 h-36 cursor-pointer group">
               <img
                 src={`${
                   imageType == 0
@@ -130,7 +128,6 @@ export default function Profile() {
                 alt="Foto de perfil"
                 className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-200"
               />
-
               <label
                 htmlFor="avatarInput"
                 className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 rounded-full flex items-center justify-center cursor-pointer transition-opacity"
@@ -141,7 +138,6 @@ export default function Profile() {
                   className="w-8 h-8"
                 />
               </label>
-
               <input
                 id="avatarInput"
                 type="file"
@@ -151,14 +147,24 @@ export default function Profile() {
               />
             </div>
 
-            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {error && <p className="text-red-500">{error}</p>}
 
-            <p className="text-lg font-semibold mb-2">
-              <span className="text-gray-400">Usuario:</span> {user.username}
-            </p>
-            <div className="flex items-center gap-6 mb-2">
+            <div className="space-y-1">
+              <p className="text-xl font-semibold">
+                <span className="text-gray-400">Usuario:</span> {user.username}
+              </p>
+              <p className="text-md font-medium">
+                <span className="text-gray-400">Correo:</span> {user.email}
+              </p>
+              <p className="text-md font-medium">
+                <span className="text-gray-400">Biografía:</span>{" "}
+                {user.bio || "Sin biografía"}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center gap-8 mt-2">
               <p
-                className="text-md font-medium cursor-pointer"
+                className="text-md font-medium cursor-pointer hover:underline"
                 onClick={() =>
                   navigate(`/followers/${user.id}`, {
                     state: {
@@ -173,7 +179,7 @@ export default function Profile() {
                 {followers.length}
               </p>
               <p
-                className="text-md font-medium cursor-pointer"
+                className="text-md font-medium cursor-pointer hover:underline"
                 onClick={() =>
                   navigate(`/following/${user.id}`, {
                     state: {
@@ -188,12 +194,17 @@ export default function Profile() {
                 {following.length}
               </p>
             </div>
-            <p className="text-md font-medium">
-              <span className="text-gray-400">Correo:</span> {user.email}
-            </p>
-            <p className="text-md font-medium mt-4">
-              <span className="text-gray-400">Biografía:</span> {user.bio}
-            </p>
+
+            <button
+              className="w-48 py-2 mt-4 rounded-full text-lg font-semibold bg-purple-600 hover:bg-purple-700 transition duration-300 shadow-md"
+              onClick={() => navigate("/edit-profile", { state: { user } })}
+            >
+              Editar perfil
+            </button>
+
+            <div className="w-full h-1 bg-gray-600 rounded-full my-6"></div>
+
+            <PostsList posts={posts} imageType={imageType} />
           </div>
         ) : (
           <p className="text-center text-gray-400 animate-pulse">

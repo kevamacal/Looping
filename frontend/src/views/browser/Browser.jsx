@@ -48,7 +48,11 @@ export default function Browser() {
               onClick={() => navigate(`/profile/${user.id}`)}
             >
               <img
-                src={user.avatar}
+                src={`${
+                  !user.avatar.startsWith("/uploads")
+                    ? user.avatar
+                    : `http://localhost:3001${encodeURI(user.avatar)}`
+                }`}
                 alt={user.username}
                 className="w-10 h-10 rounded-full"
               />
