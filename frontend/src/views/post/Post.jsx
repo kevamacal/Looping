@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHeart, FaComment } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
+import { MdEdit } from "react-icons/md";
 import "./Post.css";
 
 export default function Post() {
@@ -98,30 +99,42 @@ export default function Post() {
       <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
         {post ? (
           <div className="flex flex-col items-center text-center">
-            <div
-              className="flex items-center gap-4 w-full cursor-pointer mb-6"
-              onClick={() =>
-                navigate(
-                  `${
-                    post.author.isCurrentUser
-                      ? `/me`
-                      : `/profile/${post.author.id}`
-                  }`
-                )
-              }
-            >
-              <img
-                src={`${
-                  imageType == 0
-                    ? post.author.avatar
-                    : `http://localhost:3001${encodeURI(post.author.avatar)}`
-                }`}
-                alt="Avatar del autor"
-                className="w-12 h-12 rounded-full border-2 border-fuchsia-600"
-              />
-              <h1 className="text-xl font-semibold text-left">
-                {post.author.username}
-              </h1>
+            <div className="flex items-center gap-4 w-full mb-6">
+              <div
+                className="flex items-center gap-3 cursor-pointer"
+                onClick={() =>
+                  navigate(
+                    `${
+                      post.author.isCurrentUser
+                        ? `/me`
+                        : `/profile/${post.author.id}`
+                    }`
+                  )
+                }
+              >
+                <img
+                  src={`${
+                    imageType == 0
+                      ? post.author.avatar
+                      : `http://localhost:3001${encodeURI(post.author.avatar)}`
+                  }`}
+                  alt="Avatar del autor"
+                  className="w-12 h-12 rounded-full border-2 border-fuchsia-600"
+                />
+                <h1 className="text-xl font-semibold inline-block text-white">
+                  {post.author.username}
+                </h1>
+              </div>
+              {post.author.isCurrentUser && (
+                <motion.button
+                  className="ml-auto"
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 1.3 }}
+                  onClick={() => navigate(`/edit-post`, { state: { post } })}
+                >
+                  <MdEdit className="w-8 h-8 " />
+                </motion.button>
+              )}
             </div>
 
             {post.image && (
@@ -135,7 +148,7 @@ export default function Post() {
             <div className="flex w-full justify-between items-start mb-4">
               <div className="text-left">
                 <p className="text-md text-gray-200 mb-2 italic break-words max-w-xs">
-                  {post.content || "Este post no tiene contenido"}
+                  {post.content}
                 </p>
                 <p className="text-xs text-gray-500">
                   {post.createdAtFormatted || post.createdAt}
