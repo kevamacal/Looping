@@ -107,6 +107,31 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { content, image } = req.body;
+
+  try {
+    if (!req.user?.id) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
+    const post = await prisma.post.update({
+      where: { id: Number(id) },
+      data: {
+        content,
+        image,
+      },
+      include: { author: { select: { username: true } } },
+    });
+
+    res.status(200).json({ post });
+  } catch (error) {
+    console.error("Error updating post:", error);
+    res.status(500).json({ error: "Error al actualizar la publicación" });
+  }
+});
+
 router.post("/", validatePostInput, async (req, res) => {
   const { content, image } = req.body;
 
