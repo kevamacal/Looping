@@ -82,6 +82,8 @@ router.get("/:id", async (req, res) => {
       },
     });
 
+    author.isCurrentUser = author.id === currentUserId;
+
     const isLikedByUser = await prisma.like.findFirst({
       where: {
         userId: currentUserId,
@@ -93,6 +95,10 @@ router.get("/:id", async (req, res) => {
       ...post,
       author,
       isLiked: !!isLikedByUser,
+      comments: post.comments.map((comment) => ({
+        ...comment,
+        isCurrentUser: comment.user.id === currentUserId,
+      })),
     };
 
     res.json({ post: responsePost });

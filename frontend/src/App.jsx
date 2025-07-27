@@ -8,6 +8,7 @@ import UserProfile from "./views/userProfile/UserProfile.jsx";
 import UsersList from "./views/usersList/UsersList.jsx";
 import CreatePost from "./views/createPost/CreatePost.jsx";
 import Post from "./views/post/Post.jsx";
+import EditProfile from "./views/editProfile/EditProfile.jsx";
 import isLoggedIn from "./utils/isLoggedIn";
 import "./App.css";
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/sign-in" element={<Signin />} />
         <Route path="/login" element={<Login />} />
         <Route path="/me" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/followers/:id" element={<UsersList />} />
         <Route path="/following/:id" element={<UsersList />} />
         <Route path="/profile/:id" element={<UserProfile />} />
