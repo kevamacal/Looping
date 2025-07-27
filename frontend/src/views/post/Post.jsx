@@ -9,6 +9,7 @@ export default function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [viewComments, setViewComments] = useState(false);
+  const [imageType, setImageType] = useState(0);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -80,7 +81,9 @@ export default function Post() {
 
         if (res.ok) {
           const data = await res.json();
+
           setPost(data.post);
+          setImageType(data.post.author.avatar.startsWith("/uploads") ? 1 : 0);
         }
       } catch (err) {
         console.error("Error cargando post:", err.message);
@@ -97,10 +100,22 @@ export default function Post() {
           <div className="flex flex-col items-center text-center">
             <div
               className="flex items-center gap-4 w-full cursor-pointer mb-6"
-              onClick={() => navigate(`/profile/${post.author.id}`)}
+              onClick={() =>
+                navigate(
+                  `${
+                    post.author.isCurrentUser
+                      ? `/me`
+                      : `/profile/${post.author.id}`
+                  }`
+                )
+              }
             >
               <img
-                src={post.author.avatar}
+                src={`${
+                  imageType == 0
+                    ? post.author.avatar
+                    : `http://localhost:3001${encodeURI(post.author.avatar)}`
+                }`}
                 alt="Avatar del autor"
                 className="w-12 h-12 rounded-full border-2 border-fuchsia-600"
               />
@@ -164,7 +179,7 @@ export default function Post() {
                 >
                   <h2 className="text-lg font-bold mb-4">Comentarios</h2>
 
-                  <div className="flex flex-col gap-4 mb-6 max-h-[25vh] overflow-y-auto scrollbar-custom">
+                  <div className="flex flex-col gap-4 mb-6 max-h-[45vh] overflow-y-auto scrollbar-custom">
                     {post?.comments?.length > 0 ? (
                       post.comments.map((comment) => (
                         <div
@@ -172,11 +187,23 @@ export default function Post() {
                           className="flex gap-3 p-4 bg-gray-800 rounded-xl shadow transition hover:shadow-md"
                         >
                           <img
-                            src={comment.user.avatar}
+                            src={`${
+                              imageType == 0
+                                ? comment.user.avatar
+                                : `http://localhost:3001${encodeURI(
+                                    comment.user.avatar
+                                  )}`
+                            }`}
                             alt="Avatar del autor"
                             className="w-10 h-10 rounded-full border border-fuchsia-600 cursor-pointer"
                             onClick={() =>
-                              navigate(`/profile/${comment.user.id}`)
+                              navigate(
+                                `${
+                                  comment.isCurrentUser
+                                    ? `/me`
+                                    : `/profile/${comment.user.id}`
+                                }`
+                              )
                             }
                           />
                           <div className="flex-1 text-left">

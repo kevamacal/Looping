@@ -117,15 +117,44 @@ router.get("/me", async (req, res) => {
       },
     });
 
+    const posts = await prisma.post.findMany({
+      where: { authorId: decoded.id },
+      select: {
+        id: true,
+        image: true,
+        content: true,
+      },
+    });
+
     if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
 
     res.json({
       user,
       followers: followers.map((f) => f.follower),
       following: following.map((f) => f.following),
+      posts: posts,
     });
   } catch (error) {
     res.status(401).json({ error: "Token inválido" });
+  }
+});
+
+router.put("/me", async (req, res) => {
+  const { username, email, bio } = req.body;
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "No autorizado" });
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await prisma.user.update({
+      where: { id: decoded.id },
+      data: { username, email, bio },
+    });
+
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar el perfil" });
   }
 });
 

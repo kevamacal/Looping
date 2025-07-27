@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import PostsList from "../../components/PostsList";
 
 export default function UserProfile() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [following, setFollowing] = useState(false);
-  const [hover, setHover] = useState(false);
+  const [imageType, setImageType] = useState(0);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function UserProfile() {
         const data = await res.json();
         setUser(data.user);
         setFollowing(data.isFollowing);
+        setImageType(data.user.avatar?.startsWith("/uploads") ? 1 : 0);
       } else {
         alert("Usuario no encontrado");
       }
@@ -45,47 +47,50 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-10 w-full max-w-3xl mx-auto">
-      <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-full">
+    <div className="flex flex-col items-center justify-center bg-gray-900 px-6 py-12 rounded-2xl w-full max-w-3xl mx-auto mt-10">
+      <div className="bg-gray-800 text-white p-8 rounded-xl shadow-lg w-full">
         {user ? (
           <div className="flex flex-col items-center text-center">
-            <div
-              className="relative w-32 h-32 mb-6 cursor-pointer group"
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}
-            >
+            <h1 className="text-3xl font-bold text-center mb-8">
+              {user.username}
+            </h1>
+            <div className="relative w-32 h-32 mb-6 cursor-pointer group">
               <img
-                src={user.avatar || "/default-avatar.png"}
-                alt="Avatar de usuario"
-                className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition"
+                src={`${
+                  imageType === 0
+                    ? user.avatar || "/default-avatar.png"
+                    : `http://localhost:3001${encodeURI(user.avatar)}`
+                }`}
+                alt="Avatar"
+                className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-200"
               />
-              {hover && (
-                <img
-                  src="https://images.icon-icons.com/685/PNG/512/user_icon-icons.com_57997.png"
-                  alt="Ver perfil"
-                  className="absolute bottom-0 right-0 w-8 h-8 bg-white p-1 rounded-full shadow-md"
-                />
-              )}
             </div>
-
-            <h1 className="text-2xl font-bold mb-2">{user.username}</h1>
-            <p className="text-sm text-gray-400 mb-4">
-              {user.email || "Correo no disponible"}
+            <p className="text-md font-medium mb-2">
+              <span className="text-gray-400">Correo:</span>{" "}
+              {user.email || "No disponible"}
             </p>
-            <p className="text-md italic text-gray-300 max-w-xs mb-6">
+            <p className="text-md font-medium mt-2 mb-6 max-w-md">
+              <span className="text-gray-400">Biografía:</span>{" "}
               {user.bio || "Este usuario no ha agregado una biografía."}
             </p>
+            <div className="flex gap-4 ">
+              <button
+                onClick={toggleFollow}
+                className={`w-44 py-2 rounded-full text-lg cursor-pointer font-semibold transition duration-300 shadow-md ${
+                  following
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-fuchsia-600 hover:bg-fuchsia-700"
+                }`}
+              >
+                {following ? "Dejar de seguir" : "Seguir"}
+              </button>
+              <button className="w-44 py-2 rounded-full text-lg cursor-pointer font-semibold transition duration-300 shadow-md bg-gray-600 hover:bg-gray-700">
+                Enviar mensaje
+              </button>
+            </div>
+            <div className="w-full h-1 bg-gray-600 rounded-full my-6"></div>
 
-            <button
-              onClick={toggleFollow}
-              className={`w-44 py-2 rounded-full text-lg font-semibold transition duration-300 shadow-md ${
-                following
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-fuchsia-600 hover:bg-fuchsia-700"
-              }`}
-            >
-              {following ? "Dejar de seguir" : "Seguir"}
-            </button>
+            <PostsList posts={user.posts} imageType={imageType} />
           </div>
         ) : (
           <p className="text-center text-gray-400 animate-pulse">
