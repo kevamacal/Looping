@@ -3,12 +3,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Browser() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [users, setUsers] = useState([]);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   const randomUsers = async () => {
-    const response = await fetch("http://localhost:3001/api/users", {
+    const response = await fetch(`${apiUrl}/api/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -62,7 +63,7 @@ export default function Browser() {
                 src={`${
                   !user.avatar.startsWith("/uploads")
                     ? user.avatar
-                    : `http://localhost:3001${encodeURI(user.avatar)}`
+                    : `${apiUrl}${encodeURI(user.avatar)}`
                 }`}
                 alt={user.username}
                 className="w-10 h-10 rounded-full"

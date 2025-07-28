@@ -4,6 +4,7 @@ import PostsList from "../../components/PostsList";
 import { useNavigate } from "react-router-dom";
 
 export default function UserProfile() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [following, setFollowing] = useState(false);
@@ -13,7 +14,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch(`http://localhost:3001/api/users/${id}`, {
+      const res = await fetch(`${apiUrl}/api/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -33,7 +34,7 @@ export default function UserProfile() {
   }, [id, token]);
 
   const toggleFollow = async () => {
-    const res = await fetch(`http://localhost:3001/api/follows/${id}`, {
+    const res = await fetch(`${apiUrl}/api/follows/${id}`, {
       method: following ? "DELETE" : "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -61,7 +62,7 @@ export default function UserProfile() {
                 src={`${
                   imageType === 0
                     ? user.avatar || "/default-avatar.png"
-                    : `http://localhost:3001${encodeURI(user.avatar)}`
+                    : `${apiUrl}${encodeURI(user.avatar)}`
                 }`}
                 alt="Avatar"
                 className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-200"

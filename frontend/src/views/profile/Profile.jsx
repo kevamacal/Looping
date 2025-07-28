@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PostsList from "../../components/PostsList";
 
 export default function Profile() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState(null);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
@@ -40,16 +41,13 @@ export default function Profile() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const uploadResponse = await fetch(
-        "http://localhost:3001/api/upload-image",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+      const uploadResponse = await fetch(`${apiUrl}/api/upload-image`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
       if (!uploadResponse.ok) {
         throw new Error("Error al subir la imagen");
@@ -58,17 +56,14 @@ export default function Profile() {
       const uploadData = await uploadResponse.json();
       const newImageUrl = uploadData.imageUrl;
 
-      const updateResponse = await fetch(
-        "http://localhost:3001/api/users/myProfile",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ avatar: newImageUrl }),
-        }
-      );
+      const updateResponse = await fetch(`${apiUrl}/api/users/myProfile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ avatar: newImageUrl }),
+      });
 
       if (!updateResponse.ok) {
         throw new Error("Error al actualizar el perfil");
@@ -92,7 +87,7 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("http://localhost:3001/api/auth/me", {
+      const res = await fetch(`${apiUrl}/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -123,7 +118,7 @@ export default function Profile() {
                 src={`${
                   imageType == 0
                     ? user.avatar
-                    : `http://localhost:3001${encodeURI(user.avatar)}`
+                    : `${apiUrl}${encodeURI(user.avatar)}`
                 }`}
                 alt="Foto de perfil"
                 className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-200"

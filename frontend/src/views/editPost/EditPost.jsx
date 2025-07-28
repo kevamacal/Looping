@@ -2,12 +2,13 @@ import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 
 export default function EditPost() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const post = useLocation().state?.post;
   const navigate = useNavigate();
   const [content, setContent] = useState(post?.content || "");
   const [image, setImage] = useState(null); // Nueva imagen
   const [imagePreview, setImagePreview] = useState(
-    post?.image ? `http://localhost:3001${encodeURI(post.image)}` : null
+    post?.image ? `${apiUrl}${encodeURI(post.image)}` : null
   );
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -51,16 +52,13 @@ export default function EditPost() {
       if (image) {
         const formData = new FormData();
         formData.append("image", image);
-        const uploadResponse = await fetch(
-          "http://localhost:3001/api/upload-image",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-          }
-        );
+        const uploadResponse = await fetch(`${apiUrl}/api/upload-image`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
 
         if (!uploadResponse.ok) {
           throw new Error("Error al subir la imagen");
@@ -72,20 +70,17 @@ export default function EditPost() {
         imageUrl = post.image;
       }
 
-      const postResponse = await fetch(
-        `http://localhost:3001/api/posts/${post.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            content,
-            image: imageUrl,
-          }),
-        }
-      );
+      const postResponse = await fetch(`${apiUrl}/api/posts/${post.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content,
+          image: imageUrl,
+        }),
+      });
 
       if (!postResponse.ok) {
         const errorData = await postResponse.json();

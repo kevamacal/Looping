@@ -8,6 +8,7 @@ import { MdEdit } from "react-icons/md";
 import "./Post.css";
 
 export default function Post() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [viewComments, setViewComments] = useState(false);
@@ -19,7 +20,7 @@ export default function Post() {
 
   const toggleLike = async (postId, isLiked) => {
     const method = isLiked ? "DELETE" : "POST";
-    const res = await fetch(`http://localhost:3001/api/likes`, {
+    const res = await fetch(`${apiUrl}/api/likes`, {
       method,
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +48,7 @@ export default function Post() {
     const text = e.target[0].value.trim();
     if (!text) return;
 
-    const res = await fetch(`http://localhost:3001/api/comments`, {
+    const res = await fetch(`${apiUrl}/api/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ export default function Post() {
     });
 
     if (res.ok) {
-      const updatedPost = await fetch(`http://localhost:3001/api/posts/${id}`, {
+      const updatedPost = await fetch(`${apiUrl}/api/posts/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -77,7 +78,7 @@ export default function Post() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/posts/${id}`, {
+        const res = await fetch(`${apiUrl}/api/posts/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -101,7 +102,7 @@ export default function Post() {
       setUsers([]);
       return;
     }
-    const res = await fetch("http://localhost:3001/api/users/messages", {
+    const res = await fetch(`${apiUrl}/api/users/messages`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -112,7 +113,7 @@ export default function Post() {
     let usersTemp = data.users;
 
     if (usersTemp.length === 0) {
-      const res = await fetch("http://localhost:3001/api/auth/me", {
+      const res = await fetch(`${apiUrl}/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -128,7 +129,7 @@ export default function Post() {
   const sendMessage = async (recipientId) => {
     const message = `Mira esta publicación de ${post.author.username} y dime qué te parece: ${post.content} ==> la url es ${location.pathname}`;
 
-    const res = await fetch("http://localhost:3001/api/messages", {
+    const res = await fetch(`${apiUrl}/api/messages`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -162,7 +163,7 @@ export default function Post() {
                   src={`${
                     imageType == 0
                       ? post.author.avatar
-                      : `http://localhost:3001${encodeURI(post.author.avatar)}`
+                      : `${apiUrl}${encodeURI(post.author.avatar)}`
                   }`}
                   alt="Avatar del autor"
                   className="w-12 h-12 rounded-full border-2 border-fuchsia-600"
@@ -185,7 +186,7 @@ export default function Post() {
 
             {post.image && (
               <img
-                src={`http://localhost:3001${encodeURI(post.image)}`}
+                src={`${apiUrl}${encodeURI(post.image)}`}
                 alt="Imagen del post"
                 className="object-cover rounded-xl mb-6 max-h-[400px] w-full"
               />
@@ -273,9 +274,7 @@ export default function Post() {
                           <img
                             src={
                               user.avatar.startsWith("/uploads")
-                                ? `http://localhost:3001${encodeURI(
-                                    user.avatar
-                                  )}`
+                                ? `${apiUrl}${encodeURI(user.avatar)}`
                                 : user.avatar
                             }
                             alt="Avatar"
@@ -313,9 +312,7 @@ export default function Post() {
                             src={`${
                               imageType == 0
                                 ? comment.user.avatar
-                                : `http://localhost:3001${encodeURI(
-                                    comment.user.avatar
-                                  )}`
+                                : `${apiUrl}${encodeURI(comment.user.avatar)}`
                             }`}
                             alt="Avatar del autor"
                             className="w-10 h-10 rounded-full border border-fuchsia-600 cursor-pointer"

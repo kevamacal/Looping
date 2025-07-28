@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import img from "../../assets/redes-sociales.jpg";
 
 export default function Register() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ export default function Register() {
       return alert("Por favor, rellena todos los campos");
     }
 
-    const response = await fetch("http://localhost:3001/api/auth/register", {
+    const response = await fetch(`${apiUrl}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

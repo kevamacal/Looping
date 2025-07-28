@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 
 export default function EditProfile() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const state = useLocation().state;
   const token = localStorage.getItem("token");
@@ -34,7 +35,7 @@ export default function EditProfile() {
   const handleEditProfile = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:3001/api/auth/me", {
+    const res = await fetch(`${apiUrl}/api/auth/me`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

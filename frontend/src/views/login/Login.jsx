@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import img from "../../assets/redes-sociales.jpg";
 
 export default function Login() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,7 +12,7 @@ export default function Login() {
     if (!email || !password)
       return alert("Por favor, rellena todos los campos");
 
-    const response = await fetch("http://localhost:3001/api/auth/login", {
+    const response = await fetch(`${apiUrl}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

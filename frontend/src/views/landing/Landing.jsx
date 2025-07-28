@@ -6,6 +6,7 @@ import { FaHeart } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 export default function Landing() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [loggedIn, setLoggedIn] = useState(false);
   const [posts, setPosts] = useState([]);
   const token = localStorage.getItem("token");
@@ -21,7 +22,7 @@ export default function Landing() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch("http://localhost:3001/api/posts", {
+      const res = await fetch(`${apiUrl}/api/posts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -35,7 +36,7 @@ export default function Landing() {
 
   const toggleLike = async (postId, isLiked) => {
     const method = isLiked ? "DELETE" : "POST";
-    const res = await fetch(`http://localhost:3001/api/likes`, {
+    const res = await fetch(`${apiUrl}/api/likes`, {
       method,
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +78,7 @@ export default function Landing() {
                   className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group"
                 >
                   <img
-                    src={`http://localhost:3001${encodeURI(post.image)}`}
+                    src={`${apiUrl}${encodeURI(post.image)}`}
                     onClick={() => navigate(`/post/${post.id}`)}
                     alt="Imagen del post"
                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"

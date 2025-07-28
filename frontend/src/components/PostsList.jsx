@@ -12,9 +12,7 @@ export default function PostsList({ posts, imageType }) {
         >
           <img
             src={`${
-              imageType == 0
-                ? post.image
-                : `http://localhost:3001${encodeURI(post.image)}`
+              imageType == 0 ? post.image : `${apiUrl}${encodeURI(post.image)}`
             }`}
             alt="Avatar del autor"
             className="w-18 h-18 rounded-full border border-fuchsia-600"

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Messages() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -66,7 +67,7 @@ export default function Messages() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("http://localhost:3001/api/users/messages", {
+      const res = await fetch(`${apiUrl}/api/users/messages`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -77,7 +78,7 @@ export default function Messages() {
       let usersTemp = data.users;
 
       if (usersTemp.length === 0) {
-        const res = await fetch("http://localhost:3001/api/auth/me", {
+        const res = await fetch(`${apiUrl}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -97,14 +98,11 @@ export default function Messages() {
     if (!selectedUser) return;
 
     const loadMessages = async () => {
-      const res = await fetch(
-        `http://localhost:3001/api/messages/${selectedUser}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${apiUrl}/api/messages/${selectedUser}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!res.ok) {
         console.error("Error al obtener los mensajes");
@@ -131,14 +129,11 @@ export default function Messages() {
     if (!exists) {
       const fetchUser = async () => {
         try {
-          const res = await fetch(
-            `http://localhost:3001/api/users/${selected}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const res = await fetch(`${apiUrl}/api/users/${selected}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           if (!res.ok) {
             alert("Usuario no encontrado");
@@ -166,7 +161,7 @@ export default function Messages() {
   }, [state.selectedUser, users, token]);
 
   const sendMessage = async (message) => {
-    const res = await fetch("http://localhost:3001/api/messages", {
+    const res = await fetch(`${apiUrl}/api/messages`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -205,7 +200,7 @@ export default function Messages() {
             <img
               src={
                 user.avatar.startsWith("/uploads")
-                  ? `http://localhost:3001${encodeURI(user.avatar)}`
+                  ? `${apiUrl}${encodeURI(user.avatar)}`
                   : user.avatar
               }
               alt={user.username}
@@ -229,7 +224,7 @@ export default function Messages() {
                   users
                     .find((u) => u.id === selectedUser)
                     ?.avatar?.startsWith("/uploads")
-                    ? `http://localhost:3001${encodeURI(
+                    ? `${apiUrl}${encodeURI(
                         users.find((u) => u.id === selectedUser)?.avatar
                       )}`
                     : users.find((u) => u.id === selectedUser)?.avatar

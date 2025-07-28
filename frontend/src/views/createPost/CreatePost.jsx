@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function CreatePost({ onPostCreated }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -53,16 +54,13 @@ export default function CreatePost({ onPostCreated }) {
       if (image) {
         const formData = new FormData();
         formData.append("image", image);
-        const uploadResponse = await fetch(
-          "http://localhost:3001/api/upload-image",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-          }
-        );
+        const uploadResponse = await fetch(`${apiUrl}/api/upload-image`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
 
         if (!uploadResponse.ok) {
           throw new Error("Error al subir la imagen");
@@ -72,7 +70,7 @@ export default function CreatePost({ onPostCreated }) {
         imageUrl = uploadData.imageUrl;
       }
 
-      const postResponse = await fetch("http://localhost:3001/api/posts", {
+      const postResponse = await fetch(`${apiUrl}/api/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
