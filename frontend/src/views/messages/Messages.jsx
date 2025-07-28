@@ -87,7 +87,6 @@ export default function Messages() {
         const data = await res.json();
         usersTemp = data.following;
       }
-      console.log("Usuarios obtenidos:", usersTemp);
       setUsers(usersTemp);
     };
 
