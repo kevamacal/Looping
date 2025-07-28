@@ -1,8 +1,9 @@
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHeart, FaComment } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
+import { IoSend } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import "./Post.css";
 
@@ -11,8 +12,10 @@ export default function Post() {
   const [post, setPost] = useState(null);
   const [viewComments, setViewComments] = useState(false);
   const [imageType, setImageType] = useState(0);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const location = useLocation();
 
   const toggleLike = async (postId, isLiked) => {
     const method = isLiked ? "DELETE" : "POST";
@@ -82,7 +85,6 @@ export default function Post() {
 
         if (res.ok) {
           const data = await res.json();
-
           setPost(data.post);
           setImageType(data.post.author.avatar.startsWith("/uploads") ? 1 : 0);
         }
@@ -94,8 +96,52 @@ export default function Post() {
     fetchPost();
   }, [id, token]);
 
+  const loadUsersToSend = async () => {
+    if (users.length > 0) {
+      setUsers([]);
+      return;
+    }
+    const res = await fetch("http://localhost:3001/api/users/messages", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) return alert("Error al obtener los usuarios");
+    const data = await res.json();
+    let usersTemp = data.users;
+
+    if (usersTemp.length === 0) {
+      const res = await fetch("http://localhost:3001/api/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) return alert("Error al obtener los usuarios");
+      const data = await res.json();
+      usersTemp = data.following;
+    }
+    setUsers(usersTemp);
+  };
+
+  const sendMessage = async (recipientId) => {
+    const message = `Mira esta publicación de ${post.author.username} y dime qué te parece: ${post.content} ==> la url es ${location.pathname}`;
+
+    const res = await fetch("http://localhost:3001/api/messages", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ recipientId, message: message }),
+    });
+    if (!res.ok) return alert("Error al enviar el mensaje");
+    navigate(`/messages`, { state: { selectedUser: recipientId } });
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-10 w-full max-w-5xl mx-auto overflow-y-hidden">
+    <div className="flex flex-col items-center justify-center px-4 py-10 w-full  mx-auto overflow-y-hidden">
       <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
         {post ? (
           <div className="flex flex-col items-center text-center">
@@ -154,7 +200,7 @@ export default function Post() {
                   {post.createdAtFormatted || post.createdAt}
                 </p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 relative">
                 <motion.button
                   onClick={() => toggleLike(post.id, post.isLiked)}
                   whileHover={{ scale: 1.2 }}
@@ -177,6 +223,70 @@ export default function Post() {
                 >
                   <FaComment className="w-6 h-6 text-white" />
                 </motion.button>
+
+                <motion.button
+                  onClick={loadUsersToSend}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 1.3 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                >
+                  <IoIosSend className="w-6 h-6 text-white " />
+                </motion.button>
+
+                <AnimatePresence>
+                  {users.length > 0 && (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        scale: 0.8,
+                        y: -10,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.8,
+                        y: -10,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25,
+                      }}
+                      className="absolute right-[-240%] mb-[50%] bg-gray-800 rounded-lg shadow-lg py-5 px-10 flex justify-center items-center flex-col gap-2"
+                    >
+                      <h2 className="text-lg font-semibold text-white mb-2">
+                        Enviar a:
+                      </h2>
+                      {users.map((user, index) => (
+                        <motion.div
+                          key={user.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex gap-4 items-center cursor-pointer hover:bg-gray-700 p-2 rounded transition-all duration-200"
+                          onClick={() => sendMessage(user.id)}
+                        >
+                          <img
+                            src={
+                              user.avatar.startsWith("/uploads")
+                                ? `http://localhost:3001${encodeURI(
+                                    user.avatar
+                                  )}`
+                                : user.avatar
+                            }
+                            alt="Avatar"
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <span>{user.username}</span>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -192,7 +302,7 @@ export default function Post() {
                 >
                   <h2 className="text-lg font-bold mb-4">Comentarios</h2>
 
-                  <div className="flex flex-col gap-4 mb-6 max-h-[45vh] overflow-y-auto scrollbar-custom">
+                  <div className="flex flex-col gap-4 mb-6 max-h-[25vh] overflow-y-auto scrollbar-custom">
                     {post?.comments?.length > 0 ? (
                       post.comments.map((comment) => (
                         <div
@@ -254,7 +364,7 @@ export default function Post() {
                       type="submit"
                       className="p-2 hover:scale-110 transition"
                     >
-                      <IoIosSend className="w-6 h-6 text-fuchsia-500" />
+                      <IoSend className="w-6 h-6 text-fuchsia-500" />
                     </button>
                   </form>
                 </motion.div>
