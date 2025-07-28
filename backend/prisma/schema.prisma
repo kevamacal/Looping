@@ -19,8 +19,10 @@ model User {
   comments Comment[]
   likes    Like[]
 
-  followers Follow[] @relation("UserFollowers")
-  following Follow[] @relation("UserFollowing")
+  followers        Follow[]  @relation("UserFollowers")
+  following        Follow[]  @relation("UserFollowing")
+  messagesSender   Message[] @relation("MessageSender")
+  messagesReceiver Message[] @relation("MessageReceiver")
 }
 
 model Post {
@@ -67,4 +69,18 @@ model Follow {
   followingId Int
 
   @@unique([followerId, followingId]) // evita duplicados
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+
+  sender   User @relation("MessageSender", fields: [senderId], references: [id])
+  senderId Int
+
+  recipient   User @relation("MessageReceiver", fields: [recipientId], references: [id])
+  recipientId Int
+
+  @@index([senderId, recipientId]) // optimiza consultas
 }
