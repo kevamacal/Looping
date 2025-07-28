@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Messages() {
   const [users, setUsers] = useState([]);
@@ -8,6 +8,7 @@ export default function Messages() {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [previousMessagesLength, setPreviousMessagesLength] = useState(0);
+  const state = useLocation().state || {};
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const messagesEndRef = useRef(null);
@@ -86,7 +87,7 @@ export default function Messages() {
         const data = await res.json();
         usersTemp = data.following;
       }
-
+      console.log("Usuarios obtenidos:", usersTemp);
       setUsers(usersTemp);
     };
 
@@ -122,6 +123,48 @@ export default function Messages() {
     const interval = setInterval(loadMessages, 500);
     return () => clearInterval(interval);
   }, [token, selectedUser]);
+
+  useEffect(() => {
+    const selected = state.selectedUser;
+    if (!selected || users.length === 0) return;
+
+    const exists = users.find((u) => u.id === selected);
+    if (!exists) {
+      const fetchUser = async () => {
+        try {
+          const res = await fetch(
+            `http://localhost:3001/api/users/${selected}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!res.ok) {
+            alert("Usuario no encontrado");
+            return;
+          }
+
+          const data = await res.json();
+
+          setUsers((prevUsers) => {
+            const alreadyExists = prevUsers.some((u) => u.id === data.user.id);
+            if (alreadyExists) return prevUsers;
+            return [...prevUsers, data.user];
+          });
+
+          setSelectedUser(data.user.id);
+        } catch (error) {
+          console.error("Error al obtener el usuario:", error);
+        }
+      };
+
+      fetchUser();
+    } else {
+      setSelectedUser(selected);
+    }
+  }, [state.selectedUser, users, token]);
 
   const sendMessage = async (message) => {
     const res = await fetch("http://localhost:3001/api/messages", {
@@ -247,7 +290,7 @@ export default function Messages() {
                   scrollToBottom();
                   setIsAtBottom(true);
                 }}
-                className="absolute bottom-[10%] right-[50%] bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-indigo-700 transition flex items-center gap-2"
+                className="absolute bottom-[15%] right-[50%] bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-indigo-700 transition flex items-center gap-2"
               >
                 <span>↓</span>
                 <span className="text-sm">Ir al final</span>

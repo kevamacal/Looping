@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostsList from "../../components/PostsList";
+import { useNavigate } from "react-router-dom";
 
 export default function UserProfile() {
   const { id } = useParams();
@@ -8,6 +9,7 @@ export default function UserProfile() {
   const [following, setFollowing] = useState(false);
   const [imageType, setImageType] = useState(0);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -84,7 +86,12 @@ export default function UserProfile() {
               >
                 {following ? "Dejar de seguir" : "Seguir"}
               </button>
-              <button className="w-44 py-2 rounded-full text-lg cursor-pointer font-semibold transition duration-300 shadow-md bg-gray-600 hover:bg-gray-700">
+              <button
+                className="w-44 py-2 rounded-full text-lg cursor-pointer font-semibold transition duration-300 shadow-md bg-gray-600 hover:bg-gray-700"
+                onClick={() =>
+                  navigate(`/messages`, { state: { selectedUser: user.id } })
+                }
+              >
                 Enviar mensaje
               </button>
             </div>
