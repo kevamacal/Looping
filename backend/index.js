@@ -40,5 +40,7 @@ app.use("/api/comments", verifyToken, commentsRouter);
 app.use("/api/messages", verifyToken, messagesRouter);
 app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 
-const PORT = 3001;
-app.listen(PORT);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
+});
