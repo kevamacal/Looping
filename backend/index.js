@@ -14,6 +14,7 @@ import followsRouter from "./routes/follows.js";
 import likesRouter from "./routes/likes.js";
 import commentsRouter from "./routes/comments.js";
 import uploadImageRouter from "./routes/uploadImage.js";
+import messagesRouter from "./routes/messages.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,6 +32,7 @@ app.use("/api/follows", verifyToken, followsRouter);
 app.use("/api/likes", verifyToken, likesRouter);
 app.use("/api/upload-image", verifyToken, uploadImageRouter);
 app.use("/api/comments", verifyToken, commentsRouter);
+app.use("/api/messages", verifyToken, messagesRouter);
 app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 
 const PORT = 3001;

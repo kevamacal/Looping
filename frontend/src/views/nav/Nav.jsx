@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import isLoggedIn from "../../utils/isLoggedIn";
+import { FaMessage, FaUser } from "react-icons/fa6";
 import Browser from "../browser/Browser";
+import { motion } from "framer-motion";
 
 export default function Nav() {
   const navigate = useNavigate();
@@ -40,12 +42,22 @@ export default function Nav() {
         {loggedIn ? (
           <>
             <Browser />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 1.3 }}
+              className="font-bold text-white cursor-pointer"
+              onClick={() => navigate("/messages")}
+            >
+              <FaMessage className="w-5 h-5" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 1.3 }}
               className="font-bold text-white cursor-pointer"
               onClick={() => navigate("/me")}
             >
-              Mi perfil
-            </button>
+              <FaUser className="w-5 h-5" />
+            </motion.button>
 
             <button
               className="font-bold text-white cursor-pointer"

@@ -10,6 +10,7 @@ import CreatePost from "./views/createPost/CreatePost.jsx";
 import Post from "./views/post/Post.jsx";
 import EditProfile from "./views/editProfile/EditProfile.jsx";
 import EditPost from "./views/editPost/EditPost.jsx";
+import Messages from "./views/messages/Messages.jsx";
 import isLoggedIn from "./utils/isLoggedIn";
 import "./App.css";
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/edit-post" element={<EditPost />} />
         <Route path="/post/:id" element={<Post />} />
+        <Route path="/messages" element={<Messages />} />
       </Routes>
     </div>
   );
