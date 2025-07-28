@@ -33,6 +33,17 @@ export default function Browser() {
           className="bg-transparent text-white placeholder-gray-400 focus:outline-none w-full"
           onFocus={randomUsers}
           onBlur={() => setTimeout(() => setUsers([]), 200)}
+          onChange={(e) => {
+            const query = e.target.value.toLowerCase();
+            if (query.length > 0) {
+              const filteredUsers = users.filter((user) =>
+                user.username.toLowerCase().includes(query)
+              );
+              setUsers(filteredUsers);
+            } else {
+              randomUsers();
+            }
+          }}
         />
         <button className="ml-2 text-white hover:text-gray-300 transition-colors">
           <FaSearch className="w-4 h-4" />
