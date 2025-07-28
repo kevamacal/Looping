@@ -27,6 +27,43 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/messages", async (req, res) => {
+  const currentUserId = req.user.id;
+
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        id: {
+          not: currentUserId,
+        },
+        OR: [
+          {
+            messagesSender: {
+              some: {
+                recipientId: currentUserId,
+              },
+            },
+          },
+          {
+            messagesReceiver: {
+              some: {
+                senderId: currentUserId,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    res.json({ users });
+  } catch (error) {
+    console.error("Error al obtener los usuarios:", error);
+    res
+      .status(500)
+      .json({ error: `Error al obtener los usuarios ${error.message}` });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const currentUserId = req.user.id;
