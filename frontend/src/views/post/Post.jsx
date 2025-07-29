@@ -5,10 +5,10 @@ import { FaHeart, FaComment } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
 import { IoSend } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
-import "./Post.css";
 
 export default function Post() {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [viewComments, setViewComments] = useState(false);
@@ -125,7 +125,7 @@ export default function Post() {
   };
 
   const sendMessage = async (recipientId) => {
-    const message = `Mira esta publicación de ${post.author.username} y dime qué te parece: ${post.content} ==> la url es ${location.pathname}`;
+    const message = `Mira esta publicación de ${post.author.username} y dime qué te parece: ${post.content} ==> la url es ${frontendUrl}${location.pathname}`;
 
     const res = await fetch(`${apiUrl}/api/messages`, {
       method: "POST",
@@ -133,15 +133,15 @@ export default function Post() {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ recipientId, message: message }),
+      body: JSON.stringify({ recipientId, message }),
     });
     if (!res.ok) return alert("Error al enviar el mensaje");
     navigate(`/messages`, { state: { selectedUser: recipientId } });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-10 w-full  mx-auto overflow-y-hidden">
-      <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
+    <div className="flex flex-col items-center justify-center px-4 py-10 w-full">
+      <div className="bg-gray-900 text-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-3xl">
         {post ? (
           <div className="flex flex-col items-center text-center">
             <div className="flex items-center gap-4 w-full mb-6">
@@ -149,11 +149,9 @@ export default function Post() {
                 className="flex items-center gap-3 cursor-pointer"
                 onClick={() =>
                   navigate(
-                    `${
-                      post.author.isCurrentUser
-                        ? `/me`
-                        : `/profile/${post.author.id}`
-                    }`
+                    post.author.isCurrentUser
+                      ? `/me`
+                      : `/profile/${post.author.id}`
                   )
                 }
               >
@@ -162,7 +160,7 @@ export default function Post() {
                   alt="Avatar del autor"
                   className="w-12 h-12 rounded-full border-2 border-fuchsia-600"
                 />
-                <h1 className="text-xl font-semibold inline-block text-white">
+                <h1 className="text-xl font-semibold">
                   {post.author.username}
                 </h1>
               </div>
@@ -173,7 +171,7 @@ export default function Post() {
                   whileTap={{ scale: 1.3 }}
                   onClick={() => navigate(`/edit-post`, { state: { post } })}
                 >
-                  <MdEdit className="w-8 h-8 " />
+                  <MdEdit className="w-7 h-7" />
                 </motion.button>
               )}
             </div>
@@ -182,20 +180,20 @@ export default function Post() {
               <img
                 src={post.image}
                 alt="Imagen del post"
-                className="object-cover rounded-xl mb-6 max-h-[400px] w-full"
+                className="object-cover rounded-xl mb-6 w-full max-h-[300px] sm:max-h-[400px]"
               />
             )}
 
-            <div className="flex w-full justify-between items-start mb-4">
-              <div className="text-left">
-                <p className="text-md text-gray-200 mb-2 italic break-words max-w-xs">
+            <div className="flex w-full justify-between items-start mb-4 flex-col sm:flex-row gap-4 relative">
+              <div className="text-left w-full sm:w-auto">
+                <p className="text-sm sm:text-md text-gray-200 mb-2 italic break-words whitespace-pre-wrap">
                   {post.content}
                 </p>
                 <p className="text-xs text-gray-500">
                   {post.createdAtFormatted || post.createdAt}
                 </p>
               </div>
-              <div className="flex items-center gap-4 relative">
+              <div className="flex items-center gap-4 ">
                 <motion.button
                   onClick={() => toggleLike(post.id, post.isLiked)}
                   whileHover={{ scale: 1.2 }}
@@ -225,33 +223,21 @@ export default function Post() {
                   whileTap={{ scale: 1.3 }}
                   transition={{ type: "spring", stiffness: 300, damping: 10 }}
                 >
-                  <IoIosSend className="w-6 h-6 text-white " />
+                  <IoIosSend className="w-6 h-6 text-white" />
                 </motion.button>
 
                 <AnimatePresence>
                   {users.length > 0 && (
                     <motion.div
-                      initial={{
-                        opacity: 0,
-                        scale: 0.8,
-                        y: -10,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        scale: 1,
-                        y: 0,
-                      }}
-                      exit={{
-                        opacity: 0,
-                        scale: 0.8,
-                        y: -10,
-                      }}
+                      initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, y: -10 }}
                       transition={{
                         type: "spring",
                         stiffness: 300,
                         damping: 25,
                       }}
-                      className="absolute right-[-240%] mb-[50%] bg-gray-800 rounded-lg shadow-lg py-5 px-10 flex justify-center items-center flex-col gap-2"
+                      className="absolute right-[-20%] mt-2 w-64 bg-gray-800 rounded-lg shadow-lg py-5 px-4 flex flex-col gap-2 z-50"
                     >
                       <h2 className="text-lg font-semibold text-white mb-2">
                         Enviar a:
@@ -262,7 +248,7 @@ export default function Post() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="flex gap-4 items-center cursor-pointer hover:bg-gray-700 p-2 rounded transition-all duration-200"
+                          className="flex gap-4 items-center cursor-pointer hover:bg-gray-700 p-2 rounded"
                           onClick={() => sendMessage(user.id)}
                         >
                           <img
@@ -287,41 +273,39 @@ export default function Post() {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="w-full mt-6 border-t border-gray-700 pt-6 "
+                  className="w-full mt-6 border-t border-gray-700 pt-6"
                 >
                   <h2 className="text-lg font-bold mb-4">Comentarios</h2>
 
-                  <div className="flex flex-col gap-4 mb-6 max-h-[25vh] overflow-y-auto scrollbar-custom">
+                  <div className="flex flex-col gap-4 mb-6 max-h-[30vh] overflow-y-auto pr-1 sm:pr-2 scrollbar-custom">
                     {post?.comments?.length > 0 ? (
                       post.comments.map((comment) => (
                         <div
                           key={comment.id}
-                          className="flex gap-3 p-4 bg-gray-800 rounded-xl shadow transition hover:shadow-md"
+                          className="flex gap-3 p-3 sm:p-4 bg-gray-800 rounded-xl shadow hover:shadow-md"
                         >
                           <img
                             src={comment.user.avatar}
-                            alt="Avatar del autor"
+                            alt="Avatar"
                             className="w-10 h-10 rounded-full border border-fuchsia-600 cursor-pointer"
                             onClick={() =>
                               navigate(
-                                `${
-                                  comment.isCurrentUser
-                                    ? `/me`
-                                    : `/profile/${comment.user.id}`
-                                }`
+                                comment.isCurrentUser
+                                  ? `/me`
+                                  : `/profile/${comment.user.id}`
                               )
                             }
                           />
                           <div className="flex-1 text-left">
                             <div className="flex justify-between items-center mb-1">
-                              <p className="text-sm font-semibold text-white">
+                              <p className="text-sm font-semibold">
                                 {comment.user.username}
                               </p>
                               <p className="text-xs text-gray-500">
                                 {comment.createdAt}
                               </p>
                             </div>
-                            <p className="text-sm text-gray-300 leading-snug">
+                            <p className="text-sm text-gray-300">
                               {comment.text}
                             </p>
                           </div>
@@ -341,7 +325,7 @@ export default function Post() {
                     <input
                       type="text"
                       placeholder="Escribe un comentario..."
-                      className="flex-1 border-b-2 border-gray-600 focus:border-fuchsia-600 focus:outline-none px-3 py-2 bg-transparent text-white placeholder-gray-400 transition-all duration-150"
+                      className="flex-1 border-b-2 border-gray-600 focus:border-fuchsia-600 focus:outline-none px-3 py-2 bg-transparent text-white placeholder-gray-400"
                     />
                     <button
                       type="submit"
