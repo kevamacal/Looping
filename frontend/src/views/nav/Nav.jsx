@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import isLoggedIn from "../../utils/isLoggedIn";
 import { FaMessage, FaUser } from "react-icons/fa6";
+import { CiCirclePlus } from "react-icons/ci";
 import Browser from "../browser/Browser";
 import { motion } from "framer-motion";
 
