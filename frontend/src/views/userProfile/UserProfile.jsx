@@ -98,10 +98,7 @@ export default function UserProfile() {
 
             <div className="w-full h-1 bg-gray-600 rounded-full my-6"></div>
 
-            <PostsList
-              posts={user.posts}
-              imageType={user.avatarUrl.includes(apiUrl) ? 1 : 0}
-            />
+            <PostsList posts={user.posts} />
           </div>
         ) : (
           <p className="text-center text-gray-400 animate-pulse">
