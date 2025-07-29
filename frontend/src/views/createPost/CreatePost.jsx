@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useNavigate } from "react";
 
 export default function CreatePost({ onPostCreated }) {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -7,6 +7,7 @@ export default function CreatePost({ onPostCreated }) {
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const handleImageChange = (e) => {
@@ -93,6 +94,7 @@ export default function CreatePost({ onPostCreated }) {
       if (onPostCreated) {
         onPostCreated(newPost.post);
       }
+      navigate("/me");
     } catch (err) {
       setError(err.message);
     } finally {
