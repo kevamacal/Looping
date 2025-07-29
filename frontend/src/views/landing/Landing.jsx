@@ -78,7 +78,7 @@ export default function Landing() {
                   className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group"
                 >
                   <img
-                    src={`${apiUrl}${encodeURI(post.image)}`}
+                    src={post.image}
                     onClick={() => navigate(`/post/${post.id}`)}
                     alt="Imagen del post"
                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"

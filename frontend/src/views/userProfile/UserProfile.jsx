@@ -1,32 +1,32 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostsList from "../../components/PostsList";
-import { useNavigate } from "react-router-dom";
 
 export default function UserProfile() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [following, setFollowing] = useState(false);
-  const [imageType, setImageType] = useState(0);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch(`${apiUrl}/api/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      try {
+        const res = await fetch(`${apiUrl}/api/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (res.ok) {
+        if (!res.ok) throw new Error("Usuario no encontrado");
         const data = await res.json();
+
         setUser(data.user);
+
         setFollowing(data.isFollowing);
-        setImageType(data.user.avatar?.startsWith("/uploads") ? 1 : 0);
-      } else {
-        alert("Usuario no encontrado");
+      } catch (err) {
+        alert(err.message);
       }
     };
 
@@ -57,17 +57,15 @@ export default function UserProfile() {
             <h1 className="text-3xl font-bold text-center mb-8">
               {user.username}
             </h1>
+
             <div className="relative w-32 h-32 mb-6 cursor-pointer group">
               <img
-                src={`${
-                  imageType === 0
-                    ? user.avatar || "/default-avatar.png"
-                    : `${apiUrl}${encodeURI(user.avatar)}`
-                }`}
+                src={user.avatar}
                 alt="Avatar"
                 className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-200"
               />
             </div>
+
             <p className="text-md font-medium mb-2">
               <span className="text-gray-400">Correo:</span>{" "}
               {user.email || "No disponible"}
@@ -76,6 +74,7 @@ export default function UserProfile() {
               <span className="text-gray-400">Biografía:</span>{" "}
               {user.bio || "Este usuario no ha agregado una biografía."}
             </p>
+
             <div className="flex gap-4 ">
               <button
                 onClick={toggleFollow}
@@ -96,9 +95,13 @@ export default function UserProfile() {
                 Enviar mensaje
               </button>
             </div>
+
             <div className="w-full h-1 bg-gray-600 rounded-full my-6"></div>
 
-            <PostsList posts={user.posts} imageType={imageType} />
+            <PostsList
+              posts={user.posts}
+              imageType={user.avatarUrl.includes(apiUrl) ? 1 : 0}
+            />
           </div>
         ) : (
           <p className="text-center text-gray-400 animate-pulse">

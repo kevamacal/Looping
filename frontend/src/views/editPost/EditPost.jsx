@@ -7,11 +7,8 @@ export default function EditPost() {
   const navigate = useNavigate();
   const [content, setContent] = useState(post?.content || "");
   const [image, setImage] = useState(null); // Nueva imagen
-  const [imagePreview, setImagePreview] = useState(
-    post?.image ? `${apiUrl}${encodeURI(post.image)}` : null
-  );
+  const [imagePreview, setImagePreview] = useState(post?.image);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -178,11 +175,6 @@ export default function EditPost() {
           </button>
 
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          {success && (
-            <p className="text-green-500 mt-2">
-              ¡Publicación actualizada con éxito!
-            </p>
-          )}
         </form>
       </div>
     </div>

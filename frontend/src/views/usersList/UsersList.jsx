@@ -1,11 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function UsersList() {
-  const apiUrl = import.meta.env.VITE_API_URL;
   const { state } = useLocation();
   const users = state?.users || [];
   const type = state?.type || "usuarios";
-  const imageType = state?.imageType || 0;
   const navigate = useNavigate();
 
   return (
@@ -25,11 +23,7 @@ export default function UsersList() {
               onClick={() => navigate(`/profile/${user.id}`)}
             >
               <img
-                src={`${
-                  imageType == 0
-                    ? user.avatar
-                    : `${apiUrl}${encodeURI(user.avatar)}`
-                }`}
+                src={user.avatar}
                 alt="avatar"
                 className="w-12 h-12 rounded-full object-cover border border-white"
               />

@@ -12,7 +12,6 @@ export default function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [viewComments, setViewComments] = useState(false);
-  const [imageType, setImageType] = useState(0);
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -87,7 +86,6 @@ export default function Post() {
         if (res.ok) {
           const data = await res.json();
           setPost(data.post);
-          setImageType(data.post.author.avatar.startsWith("/uploads") ? 1 : 0);
         }
       } catch (err) {
         console.error("Error cargando post:", err.message);
@@ -160,11 +158,7 @@ export default function Post() {
                 }
               >
                 <img
-                  src={`${
-                    imageType == 0
-                      ? post.author.avatar
-                      : `${apiUrl}${encodeURI(post.author.avatar)}`
-                  }`}
+                  src={post.author.avatar}
                   alt="Avatar del autor"
                   className="w-12 h-12 rounded-full border-2 border-fuchsia-600"
                 />
@@ -186,7 +180,7 @@ export default function Post() {
 
             {post.image && (
               <img
-                src={`${apiUrl}${encodeURI(post.image)}`}
+                src={post.image}
                 alt="Imagen del post"
                 className="object-cover rounded-xl mb-6 max-h-[400px] w-full"
               />
@@ -272,11 +266,7 @@ export default function Post() {
                           onClick={() => sendMessage(user.id)}
                         >
                           <img
-                            src={
-                              user.avatar.startsWith("/uploads")
-                                ? `${apiUrl}${encodeURI(user.avatar)}`
-                                : user.avatar
-                            }
+                            src={user.avatar}
                             alt="Avatar"
                             className="w-10 h-10 rounded-full"
                           />
@@ -309,11 +299,7 @@ export default function Post() {
                           className="flex gap-3 p-4 bg-gray-800 rounded-xl shadow transition hover:shadow-md"
                         >
                           <img
-                            src={`${
-                              imageType == 0
-                                ? comment.user.avatar
-                                : `${apiUrl}${encodeURI(comment.user.avatar)}`
-                            }`}
+                            src={comment.user.avatar}
                             alt="Avatar del autor"
                             className="w-10 h-10 rounded-full border border-fuchsia-600 cursor-pointer"
                             onClick={() =>

@@ -115,11 +115,7 @@ export default function Profile() {
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="relative w-36 h-36 cursor-pointer group">
               <img
-                src={`${
-                  imageType == 0
-                    ? user.avatar
-                    : `${apiUrl}${encodeURI(user.avatar)}`
-                }`}
+                src={user.avatar}
                 alt="Foto de perfil"
                 className="w-full h-full rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-200"
               />

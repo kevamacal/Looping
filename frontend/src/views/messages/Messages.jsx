@@ -194,15 +194,11 @@ export default function Messages() {
             key={user.id}
             className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-800 transition ${
               selectedUser === user.id ? "bg-gray-800" : ""
-            }`} 
+            }`}
             onClick={() => setSelectedUser(user.id)}
           >
             <img
-              src={
-                user.avatar.startsWith("/uploads")
-                  ? `${apiUrl}${encodeURI(user.avatar)}`
-                  : user.avatar
-              }
+              src={user.avatar}
               alt={user.username}
               className="w-10 h-10 rounded-full"
             />
@@ -220,15 +216,7 @@ export default function Messages() {
           <>
             <div className="flex items-center gap-3 p-4 border-b border-gray-700 bg-gray-900">
               <img
-                src={
-                  users
-                    .find((u) => u.id === selectedUser)
-                    ?.avatar?.startsWith("/uploads")
-                    ? `${apiUrl}${encodeURI(
-                        users.find((u) => u.id === selectedUser)?.avatar
-                      )}`
-                    : users.find((u) => u.id === selectedUser)?.avatar
-                }
+                src={users.find((u) => u.id === selectedUser)?.avatar}
                 alt={users.find((u) => u.id === selectedUser)?.username}
                 className="w-10 h-10 rounded-full object-cover cursor-pointer"
                 onClick={() => navigate(`/profile/${selectedUser}`)}

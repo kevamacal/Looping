@@ -1,41 +1,19 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
+import { storage } from "../utils/cloudinary.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
+const upload = multer({ storage });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join("public", "uploads");
-    fs.mkdirSync(uploadPath, { recursive: true });
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
-    cb(null, uniqueName);
-  },
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("image/")) {
-      return cb(new Error("Solo se permiten imágenes"), false);
-    }
-    cb(null, true);
-  },
-});
-
-router.post("/", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No se ha subido ninguna imagen" });
+router.post("/", verifyToken, upload.single("image"), async (req, res) => {
+  try {
+    const imageUrl = req.file.path;
+    res.status(200).json({ imageUrl });
+  } catch (error) {
+    console.error("Error al subir imagen:", error);
+    res.status(500).json({ error: "Error al subir imagen" });
   }
-
-  const imageUrl = `/uploads/${req.file.filename}`;
-
-  res.status(200).json({ imageUrl });
 });
 
 export default router;

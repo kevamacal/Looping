@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-export default function PostsList({ posts, imageType }) {
+export default function PostsList({ posts }) {
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   return posts && posts.length > 0 ? (
@@ -12,9 +12,7 @@ export default function PostsList({ posts, imageType }) {
           onClick={() => navigate(`/post/${post.id}`)}
         >
           <img
-            src={`${
-              imageType == 0 ? post.image : `${apiUrl}${encodeURI(post.image)}`
-            }`}
+            src={post.image}
             alt="Avatar del autor"
             className="w-18 h-18 rounded-full border border-fuchsia-600"
           />
