@@ -52,7 +52,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="flex flex-center flex-col items-center justify-center bg-gray-900 text-white p-8 rounded-2xl shadow-lg w-9/10 md:w-1/2 lg:w-1/3">
+    <div className="flex flex-center flex-col items-center justify-center bg-gray-900 text-white p-8 rounded-2xl shadow-lg w-full md:w-1/2 lg:w-1/3">
       <h1 className="text-3xl font-bold text-white mb-6">Editar Perfil</h1>
       <form
         onSubmit={handleEditProfile}
