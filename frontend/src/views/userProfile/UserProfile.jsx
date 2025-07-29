@@ -78,7 +78,7 @@ export default function UserProfile() {
             <div className="flex gap-4 ">
               <button
                 onClick={toggleFollow}
-                className={`w-44 py-2 rounded-full text-lg cursor-pointer font-semibold transition duration-300 shadow-md ${
+                className={`py-[2%] px-[15px] rounded-full cursor-pointer font-semibold transition duration-300 shadow-md ${
                   following
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-fuchsia-600 hover:bg-fuchsia-700"
@@ -87,7 +87,7 @@ export default function UserProfile() {
                 {following ? "Dejar de seguir" : "Seguir"}
               </button>
               <button
-                className="w-44 py-2 rounded-full text-lg cursor-pointer font-semibold transition duration-300 shadow-md bg-gray-600 hover:bg-gray-700"
+                className="py-[2%] px-[15px] rounded-full cursor-pointer font-semibold transition duration-300 shadow-md bg-gray-600 hover:bg-gray-700"
                 onClick={() =>
                   navigate(`/messages`, { state: { selectedUser: user.id } })
                 }
