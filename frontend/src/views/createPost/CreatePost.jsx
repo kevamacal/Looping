@@ -104,23 +104,24 @@ export default function CreatePost({ onPostCreated }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center text-white">
+    <div className="max-w-2xl w-full px-4 sm:px-6 mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-white">
         Crear Nueva Publicación
       </h1>
+
       <form
         onSubmit={handleSubmit}
-        className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-xl shadow-lg border border-gray-700"
+        className="bg-gradient-to-br from-gray-800 to-gray-900 px-4 py-6 sm:p-8 rounded-xl shadow-lg border border-gray-700"
       >
         {error && (
-          <div className="mb-4 p-3 bg-red-900/50 border border-red-700 text-red-200 rounded-lg">
+          <div className="mb-4 p-3 bg-red-900/50 border border-red-700 text-red-200 rounded-lg text-sm">
             {error}
           </div>
         )}
 
         <textarea
-          className="w-full p-4 mb-6 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 transition-all"
-          rows="6"
+          className="w-full p-3 sm:p-4 mb-6 bg-gray-700 text-gray-100 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-gray-400 text-sm sm:text-base"
+          rows="5"
           placeholder="¿Qué estás pensando?..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -136,64 +137,47 @@ export default function CreatePost({ onPostCreated }) {
               <img
                 src={imagePreview}
                 alt="Preview"
-                className="w-full h-64 object-cover rounded-lg mb-2"
+                className="w-full h-52 sm:h-64 object-cover rounded-lg mb-2"
               />
               <button
                 type="button"
                 onClick={handleRemoveImage}
                 className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                ✕
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col w-full h-32 border-2 border-dashed border-gray-600 hover:border-blue-500 rounded-xl cursor-pointer bg-gray-700 hover:bg-gray-700/50 transition-all">
-                <div className="flex flex-col items-center justify-center pt-7">
-                  <svg
-                    className="w-8 h-8 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <p className="pt-1 text-sm text-gray-400">
-                    Haz clic para subir una imagen (max. 5MB)
-                  </p>
-                </div>
-                <input
-                  type="file"
-                  className="opacity-0"
-                  accept="image/*"
-                  onChange={handleImageChange}
+            <label className="flex flex-col items-center justify-center w-full h-28 sm:h-32 border-2 border-dashed border-gray-600 hover:border-blue-500 rounded-xl cursor-pointer bg-gray-700 hover:bg-gray-700/50 transition">
+              <svg
+                className="w-8 h-8 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
-              </label>
-            </div>
+              </svg>
+              <p className="mt-2 text-sm text-gray-400 text-center px-2">
+                Haz clic para subir una imagen (max. 5MB)
+              </p>
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </label>
           )}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex flex-col sm:flex-row justify-end sm:justify-between gap-4">
           <button
-            className={`bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 ${
+            className={`w-full sm:w-auto bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 ${
               isSubmitting ? "opacity-70 cursor-not-allowed" : ""
             }`}
             type="submit"
