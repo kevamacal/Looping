@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 
 export default function PostsList({ posts, imageType }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   return posts && posts.length > 0 ? (
     <div className="w-full space-y-4 grid grid-cols-3 gap-4">
