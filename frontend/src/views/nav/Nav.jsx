@@ -49,7 +49,7 @@ export default function Nav() {
               className="font-bold text-white cursor-pointer"
               onClick={() => navigate("/create-post")}
             >
-              <CiCirclePlus className="text-white w-5 h-5" />
+              <CiCirclePlus className="text-white w-7 h-7" />
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.2 }}
