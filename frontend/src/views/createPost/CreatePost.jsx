@@ -1,4 +1,5 @@
-import { useState, useNavigate } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function CreatePost({ onPostCreated }) {
   const apiUrl = import.meta.env.VITE_API_URL;
