@@ -194,7 +194,7 @@ export default function Messages() {
             key={user.id}
             className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-800 transition ${
               selectedUser === user.id ? "bg-gray-800" : ""
-            }`}
+            }`} 
             onClick={() => setSelectedUser(user.id)}
           >
             <img

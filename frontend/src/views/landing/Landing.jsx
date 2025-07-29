@@ -57,21 +57,21 @@ export default function Landing() {
   };
 
   return (
-    <div className="">
+    <div className="px-4 pb-10">
       {loggedIn ? (
-        <div className="w-full max-w-6xl mt-20">
+        <div className="w-full max-w-6xl mx-auto mt-20">
           {posts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 px-8 bg-gray-800 rounded-xl shadow-lg">
-              <CiCirclePlus className="text-white text-8xl mb-4" />
-              <p className="text-white text-2xl font-medium">
+            <div className="flex flex-col items-center justify-center py-16 px-6 bg-gray-800 rounded-xl shadow-lg">
+              <CiCirclePlus className="text-white text-6xl mb-4" />
+              <p className="text-white text-xl font-medium text-center">
                 No hay publicaciones todavía
               </p>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-400 text-sm mt-2 text-center">
                 ¡Sé el primero en compartir algo!
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {posts.map((post) => (
                 <div
                   key={post.id}
@@ -87,7 +87,7 @@ export default function Landing() {
                     <div className="flex flex-col">
                       <p className="font-semibold">{post.author.username}</p>
                       {post.content && (
-                        <p className="text-xs text-gray-300 truncate">
+                        <p className="text-xs text-gray-300 truncate max-w-[80%]">
                           {post.content}
                         </p>
                       )}
@@ -120,8 +120,8 @@ export default function Landing() {
           )}
         </div>
       ) : (
-        <div className="text-center">
-          <h1 className="text-5xl font-bold text-white mb-6 drop-shadow-md">
+        <div className="text-center mt-20">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 drop-shadow-md">
             Bienvenido a Looping
           </h1>
           <p className="text-lg text-gray-300 max-w-md mx-auto">
