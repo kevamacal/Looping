@@ -61,7 +61,7 @@ export default function Landing() {
       {loggedIn ? (
         <div className="w-full max-w-6xl mt-20">
           {posts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 bg-gray-800 rounded-xl shadow-lg">
+            <div className="flex flex-col items-center justify-center py-16 px-8 bg-gray-800 rounded-xl shadow-lg">
               <CiCirclePlus className="text-white text-8xl mb-4" />
               <p className="text-white text-2xl font-medium">
                 No hay publicaciones todavía

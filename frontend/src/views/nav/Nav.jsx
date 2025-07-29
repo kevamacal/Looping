@@ -46,6 +46,14 @@ export default function Nav() {
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 1.3 }}
               className="font-bold text-white cursor-pointer"
+              onClick={() => navigate("/create-post")}
+            >
+              <CiCirclePlus className="text-white text-8xl mb-4" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 1.3 }}
+              className="font-bold text-white cursor-pointer"
               onClick={() => navigate("/messages")}
             >
               <FaMessage className="w-5 h-5" />
